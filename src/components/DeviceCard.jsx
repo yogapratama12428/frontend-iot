@@ -18,7 +18,7 @@ const DeviceCard = ({data}) => {
     setIsToggled(!isToggled);
     // console.log(isToggled)
     try {
-        const response = await axios.put(`http://localhost:5000/device/${data.id}`, {
+        const response = await axios.put(`https://iotbackend-1-g4573555.deta.app/device/${data.id}`, {
             value: !isToggled ? 'On' : 'Off', 
         })
         console.log(response.data)
