@@ -69,7 +69,7 @@ const Dashboard = () => {
         setEmail(auth.currentUser.email)
         setLogin(true)
 
-        await axios.post('https://iotbackend-1-g4573555.deta.app', {
+        await axios.post('https://iotbackend-1-g4573555.deta.app/user', {
             name: auth.currentUser.displayName,
             email: auth.currentUser.email
           })
