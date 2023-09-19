@@ -29,7 +29,7 @@ const Dashboard = () => {
       
         const getDataDevice = async () =>{
             if (data) {
-                const response = await axios.get(`http://localhost:5000/user/${data}`)
+                const response = await axios.get(`https://iotbackend-1-g4573555.deta.app/user/${data}`)
                 console.log(response.data);
                 setDevices(response.data)
             }
@@ -47,7 +47,7 @@ const Dashboard = () => {
 
     const handleRegisterdevice = async () => {
         try {
-            const response = await axios.post('http://localhost:5000/device', {
+            const response = await axios.post('https://iotbackend-1-g4573555.deta.app/device', {
                 title: device_name, 
                 description : device_description,
                 value: device_value,
@@ -69,7 +69,7 @@ const Dashboard = () => {
         setEmail(auth.currentUser.email)
         setLogin(true)
 
-        await axios.post('http://localhost:5000/user', {
+        await axios.post('https://iotbackend-1-g4573555.deta.app', {
             name: auth.currentUser.displayName,
             email: auth.currentUser.email
           })
