@@ -1,32 +1,15 @@
-import { useEffect, useState } from "react";
+import {  useState } from "react";
+import useSWR from "swr";
+import { fetcher } from "./useFetcher";
 
-function useFetchData(url) {
-    const [devices, setDevices] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+function useFetchData(id) {
+    const [device, setDevices] = useState([]);
   
-    useEffect(() => {
-      // Fungsi async untuk mengambil data dari URL
-      async function fetchData() {
-        try {
-          const response = await fetch(url);
-          if (!response.ok) {
-            throw new Error('Gagal mengambil data');
-          }
-          const jsonData = await response.json();
-          console.log(jsonData)
-          setDevices(jsonData);
-          setLoading(false);
-        } catch (error) {
-          setError(error);
-          setLoading(false);
-        }
-      }
+    const { data } = useSWR(`https://iotbackend-1-g4573555.deta.app/user/${id}`, fetcher)
+
+    setDevices(data)
   
-      fetchData();
-    }, [url]);
-  
-    return { devices, loading, error };
+    return { device };
   }
   
   export default useFetchData;

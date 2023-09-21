@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import DeviceCard from "../components/DeviceCard";
 import axios from "axios";
 import { signInWithPopup, signOut } from "firebase/auth"
@@ -9,42 +9,37 @@ import {
     Button,
     Typography,
   } from "@material-tailwind/react";
-
-
+import useSWR from "swr";
+import { fetcher } from "../hooks/useFetcher";
 
 const Dashboard = () => {
-   
-    const [devices, setDevices] = useState([]);
+
     const [isLogin, setLogin] = useState(false);
     const [email, setEmail] = useState("");
     const [displayName, setDisplayName] = useState("");
     const [photoUrl, setPhotoUrl] = useState("");
     const [show,setShow]=useState(false)
-    const [data, setData] = useState("")
+    const [data1, setData] = useState("")
     const [device_name, setDeviceName] = useState("")
     const [device_value, setDeviceValue] = useState("")
     const [device_description, setDeviceDescription] = useState("")
 
-    useEffect(()=>{
-      
-        const getDataDevice = async () =>{
-            if (data) {
-                const response = await axios.get(`https://iotbackend-1-g4573555.deta.app/user/${data}`)
-                console.log(response.data);
-                setDevices(response.data)
-            }
-        }
-        
-        const timer = setTimeout(() => {
-                getDataDevice() 
-              }, 1000);
-              return () => clearTimeout(timer);
-    },[data])
+    const { data, error, isLoading } = useSWR(`https://iotbackend-1-g4573555.deta.app/user/${data1}`, fetcher)
 
+    let content 
+
+    if (isLoading) {
+        content = <p> Loading </p>
+        console.log(content)
+    }   else if (error) {
+        content = <p> error </p>
+        console.log(content)
+    }  else {
+        content = data.device && data.device.length > 0 && (data.device.map((device) => (
+            <DeviceCard key={device.id} data={device} /> 
+        ))) 
+    }
     
-
-
-
     const handleRegisterdevice = async () => {
         try {
             const response = await axios.post('https://iotbackend-1-g4573555.deta.app/device', {
@@ -59,6 +54,10 @@ const Dashboard = () => {
             console.log(error);
         }
         
+    }
+
+    const handleTest = () => {
+        console.log("test")
     }
 
     const handleLogInWithGoogle = async () => { 
@@ -90,7 +89,6 @@ const Dashboard = () => {
             setDisplayName("")
             setEmail("")
             setData("")
-            setDevices([])
             console.log(response)
           } catch (error) {
             console.error(error)
@@ -186,9 +184,9 @@ const Dashboard = () => {
                                                         <Input size="lg" label="Default Value" onChange={(e) => setDeviceValue(e.target.value)}/>
                                                         
                                                     </div>
-                                                    <Button className="mt-6" fullWidth onClick={handleRegisterdevice}>
+                                                    <button className={`py-2 border rounded-xl ${(device_name.length) ? 'bg-gray-300' : 'bg-white' }`} disabled={Boolean(!device_name.length)} onClick={handleTest}>
                                                         Register
-                                                    </Button>
+                                                    </button>
                                                     <Typography color="gray" className="mt-4 text-center font-normal">
                                                         I o T By {" "}
                                                         <a href="#" className="font-medium text-gray-900">
@@ -225,9 +223,7 @@ const Dashboard = () => {
                         <div className="flex flex-wrap justify-center">
                         
                             {
-                                !!devices.device && (devices.device.map((device) => (
-                                    <DeviceCard key={device.id} data={device} /> 
-                                ))) 
+                                content
                             }
                             
                         </div>

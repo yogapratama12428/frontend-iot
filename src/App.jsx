@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Dashboard from "./pages/Dashboard"
-import AddDevice from "./pages/AddDevice"
 
 function App() {
   
@@ -10,9 +9,7 @@ function App() {
         <Routes>
             {/* Public */}
             <Route path="/" element={<Dashboard />} />
-            <Route path="/device" element={<AddDevice />} />
-
-
+      
             {/* <Route element={<Required />} >
               <Route path="/auth" element={<Auth />} />
             </Route> */}
