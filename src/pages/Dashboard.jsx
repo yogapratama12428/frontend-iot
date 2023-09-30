@@ -53,6 +53,7 @@ const Dashboard = () => {
         } catch (error) {
             console.log(error);
         }
+        setShow(!show)
         
     }
 
@@ -184,7 +185,7 @@ const Dashboard = () => {
                                                         <Input size="lg" label="Default Value" onChange={(e) => setDeviceValue(e.target.value)}/>
                                                         
                                                     </div>
-                                                    <button className={`py-2 border rounded-xl ${(device_name.length) ? 'bg-gray-300' : 'bg-white' }`} disabled={Boolean(!device_name.length)} onClick={handleTest}>
+                                                    <button className={`py-2 border rounded-xl ${(device_name.length) ? 'bg-gray-300' : 'bg-white' }`} disabled={Boolean(!device_name.length)} onClick={handleRegisterdevice}>
                                                         Register
                                                     </button>
                                                     <Typography color="gray" className="mt-4 text-center font-normal">
