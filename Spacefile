@@ -8,3 +8,13 @@ micros:
     commands:
       - npm run build
     serve: dist
+    presets: 
+      api_keys: true
+      env:
+        - name: VITE_LOCAL_BASE_URL
+          description: LOCAL URL
+          default: "http://localhost:5000"
+        - name: VITE_VPS_BASE_URL
+          description: VPS URL
+          default: "https://iotbackend-1-g4573555.deta.app"
+       

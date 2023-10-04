@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Dashboard from "./pages/Dashboard"
+import TestingComponent from "./pages/TestingComponent"
 
 function App() {
   
@@ -9,6 +10,7 @@ function App() {
         <Routes>
             {/* Public */}
             <Route path="/" element={<Dashboard />} />
+            <Route path="/testing" element={<TestingComponent />} />
       
             {/* <Route element={<Required />} >
               <Route path="/auth" element={<Auth />} />

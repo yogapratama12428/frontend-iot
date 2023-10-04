@@ -1,16 +1,16 @@
 import { useState } from "react";
-import DeviceCard from "../components/DeviceCard";
+import SwitchWidget from "../components/SwitchWidget";
 import axios from "axios";
 import { signInWithPopup, signOut } from "firebase/auth"
 import { auth, googleProvider } from "../config.js/firebase";
 import {
     Card,
     Input,
-    Button,
     Typography,
   } from "@material-tailwind/react";
 import useSWR from "swr";
 import { fetcher } from "../hooks/useFetcher";
+import SliderWidget from "../components/SliderWidget";
 
 const Dashboard = () => {
 
@@ -21,13 +21,14 @@ const Dashboard = () => {
     const [show,setShow]=useState(false)
     const [data1, setData] = useState("")
     const [device_name, setDeviceName] = useState("")
-    const [device_value, setDeviceValue] = useState("")
+    const [category, setCategory] = useState("")
     const [device_description, setDeviceDescription] = useState("")
 
-    const { data, error, isLoading } = useSWR(`https://iotbackend-1-g4573555.deta.app/user/${data1}`, fetcher)
+    const { data, error, isLoading } = useSWR(`${import.meta.env.VITE_LOCAL_BASE_URL}/user/${data1}`, fetcher, { refreshInterval: 100 })
 
     let content 
 
+    console.log(data)
     if (isLoading) {
         content = <p> Loading </p>
         console.log(content)
@@ -36,16 +37,23 @@ const Dashboard = () => {
         console.log(content)
     }  else {
         content = data.device && data.device.length > 0 && (data.device.map((device) => (
-            <DeviceCard key={device.id} data={device} /> 
+            device.category === 'Switch' ? (
+            <SwitchWidget key={device.id} data={device} /> ) 
+            : device.category === 'Slider' ? (
+             <SliderWidget key={device.id} data={device} />
+            ) : <></>
         ))) 
     }
-    
+
     const handleRegisterdevice = async () => {
         try {
-            const response = await axios.post('https://iotbackend-1-g4573555.deta.app/device', {
-                title: device_name, 
+            const response = await axios.post(`${import.meta.env.VITE_LOCAL_BASE_URL}/device`, {
+                name: device_name, 
                 description : device_description,
-                value: device_value,
+                value_boolean : false,
+                value_number : 0,
+                value_string :"",
+                category: category,
                 authorEmail: email
             })
             console.log(response.data);
@@ -57,9 +65,9 @@ const Dashboard = () => {
         
     }
 
-    const handleTest = () => {
-        console.log("test")
-    }
+    // const handleTest = () => {
+    //     console.log("test")
+    // }
 
     const handleLogInWithGoogle = async () => { 
         await signInWithPopup(auth, googleProvider)
@@ -69,7 +77,7 @@ const Dashboard = () => {
         setEmail(auth.currentUser.email)
         setLogin(true)
 
-        await axios.post('https://iotbackend-1-g4573555.deta.app/user', {
+        await axios.post(`${import.meta.env.VITE_LOCAL_BASE_URL}/user`, {
             name: auth.currentUser.displayName,
             email: auth.currentUser.email
           })
@@ -98,7 +106,7 @@ const Dashboard = () => {
     
     return (
         <>
-            <div className="bg-gray-200 pb-10">
+            <div className=" pb-10">
                 {/* Navigation starts */}
                
                 {/* Navigation ends */}
@@ -134,7 +142,7 @@ const Dashboard = () => {
                                             className="focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-700 p-3 border rounded-lg border-gray-700 flex items-center w-full mt-10 hover:bg-gray-400"
                                             onClick={handleLogout}
                                         >
-                                        <p className="text-base font-medium ml-4 text-gray-200">
+                                        <p className="text-base font-medium ml-4 ">
                                            Logout
                                             </p>
                                         </button>
@@ -161,7 +169,7 @@ const Dashboard = () => {
                           
                           
                             <div>
-                                {show &&  <div className="py-12 w-full h-screen bg-gray-100 dark:bg-gray-900 transition duration-150 ease-in-out z-50 absolute top-0 right-0 bottom-0 left-0" id="modal">
+                                { isLogin && show &&  <div className="py-12 w-full h-screen bg-gray-100 dark:bg-gray-900 transition duration-150 ease-in-out z-50 absolute top-0 right-0 bottom-0 left-0" id="modal">
                                     <div role="alert" className="container mx-auto w-full md:w-2/3 max-w-lg">
                                         <div className="relative py-8 px-8 md:px-16 bg-white dark:bg-gray-800 dark:border-gray-700 shadow-md rounded border border-gray-400">
                                             <div className="w-full flex justify-center text-green-400 mb-4">
@@ -181,8 +189,8 @@ const Dashboard = () => {
                                                 </Typography>
                                                     <div className="mb-4 flex flex-col gap-6">
                                                         <Input size="lg" label="Name" onChange={(e) => setDeviceName(e.target.value)} />
-                                                        <Input size="lg" label="description"  onChange={ (e) => setDeviceDescription(e.target.value)}/>
-                                                        <Input size="lg" label="Default Value" onChange={(e) => setDeviceValue(e.target.value)}/>
+                                                        <Input size="lg" label="Description"  onChange={ (e) => setDeviceDescription(e.target.value)}/>
+                                                        <Input size="lg" label="Category" onChange={(e) => setCategory(e.target.value)}/>
                                                         
                                                     </div>
                                                     <button className={`py-2 border rounded-xl ${(device_name.length) ? 'bg-gray-300' : 'bg-white' }`} disabled={Boolean(!device_name.length)} onClick={handleRegisterdevice}>
@@ -207,7 +215,7 @@ const Dashboard = () => {
                             </div>}
                             <div className="px-1" id="button">
                                 <button  
-                                    className="text-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-700 p-3 border rounded-lg border-gray-700 flex items-center w-full mt-10 hover:bg-gray-400"
+                                    className="focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-700 p-3 border rounded-lg border-gray-700 flex items-center w-full mt-10 hover:bg-gray-400"
                                     onClick={()=>setShow(!show)}>
                                     Add device
                                 </button>
