@@ -214,6 +214,7 @@ const Dashboard = () => {
                             <div className="px-1" id="button">
                                 <button  
                                     className="focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-700 p-3 border rounded-lg border-gray-700 flex items-center w-full mt-10 hover:bg-gray-400"
+                                    disabled= {isLogin === true ? false : true}
                                     onClick={()=>setShow(!show)}>
                                     Add device
                                 </button>
