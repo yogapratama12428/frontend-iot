@@ -23,8 +23,8 @@ const SliderWidget = ({data}) => {
         console.log(value)
 
         try {
-            const response = await axios.put(`${import.meta.env.VITE_LOCAL_BASE_URL}/device/${data.id}`, {
-                value_number: value 
+            const response = await axios.put(`${import.meta.env.VITE_VPS_BASE_URL}/device/${data.id}`, {
+                value_number: newValue
             })
             console.log(response.data)
         } catch (error) {
@@ -36,7 +36,7 @@ const SliderWidget = ({data}) => {
 
     const handleDelete = async () => {
         try {
-            const response = await axios.delete(`${import.meta.env.VITE_LOCAL_BASE_URL}/device/${data.id}`);
+            const response = await axios.delete(`${import.meta.env.VITE_VPS_BASE_URL}/device/${data.id}`);
             console.log(response.data)
         } catch (error) {
             if(error.response) {

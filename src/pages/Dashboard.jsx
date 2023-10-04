@@ -24,7 +24,7 @@ const Dashboard = () => {
     const [category, setCategory] = useState("")
     const [device_description, setDeviceDescription] = useState("")
 
-    const { data, error, isLoading } = useSWR(`${import.meta.env.VITE_LOCAL_BASE_URL}/user/${data1}`, fetcher, { refreshInterval: 100 })
+    const { data, error, isLoading } = useSWR(`${import.meta.env.VITE_VPS_BASE_URL}/user/${data1}`, fetcher, { refreshInterval: 100})
 
     let content 
 
@@ -38,16 +38,16 @@ const Dashboard = () => {
     }  else {
         content = data.device && data.device.length > 0 && (data.device.map((device) => (
             device.category === 'Switch' ? (
-            <SwitchWidget key={device.id} data={device} /> ) 
-            : device.category === 'Slider' ? (
-             <SliderWidget key={device.id} data={device} />
-            ) : <></>
+            <SwitchWidget key={device.id} data={device} /> ) : 
+            device.category === 'Slider' ? (
+            <SliderWidget key={device.id} data={device} />
+           ):<></>
         ))) 
     }
 
     const handleRegisterdevice = async () => {
         try {
-            const response = await axios.post(`${import.meta.env.VITE_LOCAL_BASE_URL}/device`, {
+            const response = await axios.post(`${import.meta.env.VITE_VPS_BASE_URL}/device`, {
                 name: device_name, 
                 description : device_description,
                 value_boolean : false,
@@ -77,7 +77,7 @@ const Dashboard = () => {
         setEmail(auth.currentUser.email)
         setLogin(true)
 
-        await axios.post(`${import.meta.env.VITE_LOCAL_BASE_URL}/user`, {
+        await axios.post(`${import.meta.env.VITE_VPS_BASE_URL}/user`, {
             name: auth.currentUser.displayName,
             email: auth.currentUser.email
           })

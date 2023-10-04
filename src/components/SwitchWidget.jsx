@@ -3,7 +3,6 @@
 import axios from "axios";
 // import axios from "axios";
 import { useState } from "react";
-import { PowerIcon } from "@heroicons/react/24/outline";
 import { WrenchScrewdriverIcon } from "@heroicons/react/24/outline";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import {
@@ -26,7 +25,7 @@ const SwitchWidget = ({data}) => {
     setIsToggled(!isToggled);
     // console.log(isToggled)
     try {
-        const response = await axios.put(`${import.meta.env.VITE_LOCAL_BASE_URL}/device/${data.id}`, {
+        const response = await axios.put(`${import.meta.env.VITE_VPS_BASE_URL}/device/${data.id}`, {
             value_boolean: !isToggled  
         })
         console.log(response.data)
@@ -40,7 +39,7 @@ const SwitchWidget = ({data}) => {
 
     const handleDelete = async () => {
         try {
-            const response = await axios.delete(`${import.meta.env.VITE_LOCAL_BASE_URL}/device/${data.id}`);
+            const response = await axios.delete(`${import.meta.env.VITE_VPS_BASE_URL}/device/${data.id}`);
             console.log(response.data)
         } catch (error) {
             if(error.response) {
