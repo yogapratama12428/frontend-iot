@@ -23,12 +23,10 @@ const Dashboard = () => {
     const [device_name, setDeviceName] = useState("")
     const [category, setCategory] = useState("")
     const [device_description, setDeviceDescription] = useState("")
-
     const { data, error, isLoading } = useSWR(`${import.meta.env.VITE_VPS_BASE_URL}/user/${data1}`, fetcher, { refreshInterval: 100})
 
     let content 
 
-    console.log(data)
     if (isLoading) {
         content = <p> Loading </p>
         console.log(content)
